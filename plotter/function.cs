@@ -22,60 +22,106 @@ namespace plotter
             set;
         }
 
+        public bool showApproximationRects
+        {
+            get;
+            set;
+        }
+
+        public float widthApproximationRects
+        {
+            get;
+            set;
+        }
+
+        public float resolution
+        {
+            get
+            {
+                return this._resolution;
+            }
+            set
+            {
+                this._resolution = value;
+                this.calcPoints();
+            }
+        }
+
+        private float _resolution;
+
         public Color color
         {
             get;
             set;
         }
 
-        List<PointF> points;
+        public int areaOpaque
+        {
+            get
+            {
+                return this._areaOpaque;
+            }
+            set
+            {
+                this._areaOpaque = value;
+                Color clrOp = Color.FromArgb(this.areaOpaque, this.color);
+                this.areaPen = new Pen(clrOp, -1);
+            }
+        }
 
+        private int _areaOpaque;
+
+        List<PointF> points;
         ExpressionParser parser = new ExpressionParser();
+
+        private Pen pen;
+        private Pen areaPen;
+
+        #region construct
 
         public function(string equation, Color color)
         {
             this.color = color;
             this.equation = equation;
-            this.calcPoints();
+            this.resolution = 0.05f;
+            this.pen = new Pen(this.color, -1);
+            this.areaOpaque = 128;
+            this.widthApproximationRects = 1;
         }
 
         public function(string equation)
         {
             this.color = Color.Black;
             this.equation = equation;
-            this.calcPoints();
+            this.resolution = 0.05f;
+            this.pen = new Pen(this.color, -1);
+            this.areaOpaque = 128;
+            this.widthApproximationRects = 1;
         }
 
-        private void calcPoints()
+        #endregion
+
+        public void calcPoints()
         {
             this.points = new List<PointF>();
-            this.equation = equation;
-            Hashtable varTable = new Hashtable();
-            varTable.Add("x", 0.ToString());
-            for (float i = -100; i <= 100; i = i + 0.05f)
+
+            for (float i = -100; i <= 100; i = i + this._resolution)
             {
-                varTable["x"] = i.ToString();
                 FlippedPointF newPoint = new FlippedPointF(0, 0);
                 newPoint.X = i;
+                newPoint.Y = this.y(i);
 
-                double tempY = parser.Parse(equation, varTable);
-                if (Double.IsNaN(tempY))
+                if (Single.IsNaN(newPoint.Y) || Single.IsInfinity(newPoint.Y))
                 {
                     continue;
                 }
 
-                newPoint.Y = (float)tempY;
                 this.points.Add(newPoint.toPoint());
             }
         }
 
         public void Draw(Graphics g)
         {
-            Pen pen = new Pen(this.color, -1);
-
-            Color clrOp = Color.FromArgb(128, this.color);
-            Pen areaPen = new Pen(clrOp, -1);
-
             g.DrawLines(pen, points.ToArray());
             if (showAreaBelow)
             {
@@ -84,6 +130,43 @@ namespace plotter
                     g.DrawLine(areaPen, p, new PointF(p.X, 0));
                 }
             }
+            if (showApproximationRects)
+            {
+                for (float i = 0; i <= 100; i = i + this.widthApproximationRects)
+                {
+                    FlippedPointF newPoint = new FlippedPointF(0, 0);
+                    newPoint.X = i;
+                    newPoint.Y = this.y(i);
+
+                    if (Single.IsNaN(newPoint.Y) || Single.IsInfinity(newPoint.Y))
+                    {
+                        continue;
+                    }
+
+                    g.DrawRectangle(this.areaPen, newPoint.toPoint().X, newPoint.toPoint().Y, this.widthApproximationRects, this.y(i));
+                }
+                for (float i = 0; i > -100; i = i - this.widthApproximationRects)
+                {
+                    FlippedPointF newPoint = new FlippedPointF(0, 0);
+                    newPoint.X = i;
+                    newPoint.Y = this.y(i);
+
+                    if (Single.IsNaN(newPoint.Y) || Single.IsInfinity(newPoint.Y))
+                    {
+                        continue;
+                    }
+
+                    g.DrawRectangle(this.areaPen, newPoint.toPoint().X - this.widthApproximationRects, newPoint.toPoint().Y, this.widthApproximationRects, this.y(i));
+                }
+            }
+        }
+
+        public float y(float x)
+        {
+            Hashtable varTable = new Hashtable();
+            varTable.Add("x", x.ToString());
+
+            return (float)parser.Parse(equation, varTable);
         }
 
         public override string ToString()

@@ -6,3 +6,12 @@ D:\Docs\Schule\Mathe\plotter\plotter\obj\x86\Debug\plotter.Properties.Resources.
 D:\Docs\Schule\Mathe\plotter\plotter\obj\x86\Debug\plotter.csproj.GenerateResource.Cache
 D:\Docs\Schule\Mathe\plotter\plotter\obj\x86\Debug\plotter.exe
 D:\Docs\Schule\Mathe\plotter\plotter\obj\x86\Debug\plotter.pdb
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.exe
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.pdb
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\bin\Debug\plotter.exe
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\bin\Debug\plotter.pdb
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\bin\Debug\info.lundin.math.dll
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.csprojResolveAssemblyReference.cache
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.Form1.resources
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.Properties.Resources.resources
+D:\Docs\Schule\Mathe\simplePlotter.git\plotter\obj\x86\Debug\plotter.csproj.GenerateResource.Cache
